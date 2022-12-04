@@ -10,16 +10,16 @@ using namespace std;
 //  DataBase will be a singleton class
 class DataBase {
     //  map from key to player id and keyType
-    unordered_map<char, pair<playerIdType, keyType>> _key2PlayerMap;
+    unordered_map<char, pair<uint8_t, keyType>> _key2PlayerMap;
     DataBase() {};
     public:
         DataBase(DataBase const&) = delete;
         void operator=(DataBase const &) = delete;
-        playerIdType getPlayerId(const char& key);
+        uint8_t getPlayerId(const char& key);
         keyType getDirection(const char& key);
         bool isPowerKey(const char& key);
         static DataBase& getDataBase();
-        void storeKeyPlayerPair(const char& key, const playerIdType& id,
+        void storeKeyPlayerPair(const char& key, const uint8_t& id,
             const keyType& keytype);
 };
 

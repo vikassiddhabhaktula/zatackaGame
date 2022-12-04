@@ -8,15 +8,18 @@ using namespace std;
 
 class Player {
     uint8_t _id;
-    bool _alive;
     string _name;
     string _color;
     powerType _power;
+    bool _alive;
     public:
         bool isAlive() const;
         void kill();
         powerType getPower() const;
-        Player(string name, string color, powerType power);
+        uint8_t getId() const;
+        string getName() const;
+        Player(uint8_t id, string name, string color, powerType power) :
+            _id(id), _name(name), _color(color), _power(power), _alive(true) {}
 };
 
 #endif // !PLAYER_H 

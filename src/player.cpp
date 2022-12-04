@@ -1,12 +1,5 @@
 #include "player.h"
 
-Player::Player(string name, string color, powerType power) {
-    _name = name;
-    _color = color;
-    _power = power;
-    _alive = true;
-}
-
 bool Player::isAlive() const {
     return _alive;
 } 
@@ -18,3 +11,11 @@ void Player::kill() {
 powerType Player::getPower() const {
     return _power;
 }
+
+uint8_t Player::getId() const {
+    return _id;
+}
+
+string Player::getName() const {
+    return _name;
+} 

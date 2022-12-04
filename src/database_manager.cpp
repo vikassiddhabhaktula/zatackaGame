@@ -5,12 +5,12 @@ DataBase& DataBase::getDataBase() {
     return db;
 }
 
-void DataBase::storeKeyPlayerPair(const char& key, const playerIdType& id,
+void DataBase::storeKeyPlayerPair(const char& key, const uint8_t& id,
         const keyType& keytype) {
     _key2PlayerMap[key] = {id, keytype};
 }
 
-playerIdType DataBase::getPlayerId(const char& key) {
+uint8_t DataBase::getPlayerId(const char& key) {
     return _key2PlayerMap[key].first;
 }
 

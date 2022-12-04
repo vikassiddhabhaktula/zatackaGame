@@ -1,28 +1,25 @@
 #include "settings.h"
 
-GameSettings::GameSettings() {
-    _numPlayers = 2;
-    _numRounds = 4;
-    _gameSpeed = gameSpeed::MEDIUM;
-}
-
-GameSettings& GameSettings::getSettings() {
-    static GameSettings settings;
-    return settings;
-}
-
-playerIdType GameSettings::getNumPlayers() {
+uint8_t GameSettings::getNumPlayers() const {
     return _numPlayers;
 }
 
-uint32_t GameSettings::getNumRounds() {
+uint32_t GameSettings::getNumRounds() const {
     return _numRounds;
 }
 
-void GameSettings::setNumPlayers(const playerIdType& num) {
+gameSpeed GameSettings::getGameSpeed() const {
+    return _gameSpeed;
+}
+
+void GameSettings::setNumPlayers(const uint8_t& num) {
     _numPlayers = num;
 }
 
 void GameSettings::setNumRounds(const uint32_t& numRounds) {
     _numRounds = numRounds;
+}
+
+void GameSettings::setGameSpeed(const gameSpeed& speed) {
+    _gameSpeed = speed;
 }
