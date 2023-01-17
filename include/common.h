@@ -4,13 +4,21 @@
 #include <iostream>
 #include <initializer_list>
 
-enum class keyType { LEFT, POWER, RIGHT};
-enum class powerType { HOLE, WALL, BORDER};
-enum class gameSpeed {SLOW, MEDIUM, FAST};
-typedef uint8_t playerIdType;
 #define MAX_KEYS 3U
 #define MAX_PLAYERS 8U
 #define MAX_ROUNDS 10U
+
+enum class errorType {
+    SUCCESS = 0x0,
+    EBADPARM,
+    EINVALID,
+};
+
+enum class keyType { LEFT, POWER, RIGHT};
+enum class powerType { HOLE, WALL, BORDER};
+enum class gameSpeed {SLOW, MEDIUM, FAST};
+enum class colorType {RED, GREEN, BLUE};
+typedef uint8_t playerIdType;
 
 struct Point {
     uint32_t x;

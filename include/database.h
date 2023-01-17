@@ -16,10 +16,9 @@ class DataBase {
         DataBase(DataBase const&) = delete;
         void operator=(DataBase const &) = delete;
         uint8_t getPlayerId(const char& key);
-        keyType getDirection(const char& key);
-        bool isPowerKey(const char& key);
         static DataBase& getDataBase();
-        void storeKeyPlayerPair(const char& key, const uint8_t& id,
+        keyType getKeyType(const char& key);
+        errorType storeKeyPlayerPair(const char& key, const uint8_t& id,
             const keyType& keytype);
 };
 
