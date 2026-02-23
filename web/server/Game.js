@@ -117,16 +117,10 @@ class Game {
 
             player.update();
 
-            // Mark trail on grid if not in gap and grace period is over
-            if (!player.inGap && player.gracePeriod <= 0) {
-                const prev = prevPositions.get(player.id);
-                if (prev) {
-                    const effectiveWidth = Math.round(TRAIL_WIDTH * player.trailWidthMultiplier);
-                    this.grid.markLine(prev.x, prev.y, player.x, player.y, player.id, effectiveWidth);
-                }
-            }
-
-            // Check collision (skip during grace period)
+            // Check collision BEFORE marking trail (skip during grace period).
+            // graceActive=true so own trail never kills — only walls and other
+            // players' trails do.  Without this ordering fix the player's head
+            // lands inside its own freshly-stamped mark and dies every tick.
             if (player.gracePeriod <= 0) {
                 const effectiveWidth = Math.round(TRAIL_WIDTH * player.trailWidthMultiplier);
                 if (this.checkCollision(player, effectiveWidth)) {
@@ -144,6 +138,15 @@ class Game {
                         y: player.y,
                         scores: scores
                     });
+                }
+            }
+
+            // Mark trail AFTER collision check, and only if still alive.
+            if (player.alive && !player.inGap && player.gracePeriod <= 0) {
+                const prev = prevPositions.get(player.id);
+                if (prev) {
+                    const effectiveWidth = Math.round(TRAIL_WIDTH * player.trailWidthMultiplier);
+                    this.grid.markLine(prev.x, prev.y, player.x, player.y, player.id, effectiveWidth);
                 }
             }
 
@@ -248,13 +251,17 @@ class Game {
     }
 
     checkCollision(player, trailWidth) {
-        const graceActive = player.gracePeriod > 0;
+        // graceActive=true: the player's own trail cells are always skipped.
+        // With SPEED=1.8 and halfRadius=ceil(3/2)=2 the head would land inside
+        // its own freshly-placed mark every single tick, making self-trail
+        // collision impossible to implement correctly at these constants.
+        // Players are therefore killed only by walls and other players' trails.
         return this.grid.checkCollision(
             player.x,
             player.y,
             trailWidth,
             player.id,
-            graceActive
+            true
         );
     }
 

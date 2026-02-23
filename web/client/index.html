@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zatacka</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Lobby Screen -->
+  <div id="screen-lobby" class="screen active">
+    <div class="lobby-card">
+      <h1 class="game-title">ZATACKA</h1>
+
+      <div class="lobby-form">
+        <input id="player-name" type="text" placeholder="Your name" maxlength="20" autocomplete="off">
+
+        <button id="btn-create" class="btn-primary">Create Room</button>
+
+        <div class="divider">— or —</div>
+
+        <div class="join-row">
+          <input id="room-code-input" type="text" placeholder="Room code" maxlength="4" autocomplete="off">
+          <button id="btn-join" class="btn-secondary">Join Room</button>
+        </div>
+
+        <p id="lobby-error" class="error-msg"></p>
+      </div>
+
+      <div id="room-waiting" class="hidden">
+        <div class="waiting-section">
+          <div class="room-code-label">Room Code</div>
+          <div id="room-code-display"></div>
+          <div id="host-badge" class="hidden">You are the host</div>
+
+          <ul id="player-list"></ul>
+
+          <button id="btn-start" class="btn-primary" disabled>Start Game</button>
+          <p id="start-hint">Need at least 2 players to start</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="screen-game" class="screen">
+    <div id="game-area">
+      <canvas id="game-canvas" width="800" height="600"></canvas>
+      <div id="overlay"></div>
+    </div>
+    <aside id="sidebar">
+      <div id="round-display">Round 1</div>
+      <div id="scoreboard-section">
+        <div class="sidebar-label">Scores</div>
+        <div id="scoreboard"></div>
+      </div>
+      <div id="power-section">
+        <div class="sidebar-label">Power</div>
+        <div id="power-display">No power</div>
+      </div>
+      <div id="controls-legend">
+        <div class="sidebar-label">Controls</div>
+        <div class="control-line">← → / A D : Turn</div>
+        <div class="control-line">Space : Use power</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div id="screen-gameover" class="screen">
+    <div class="gameover-card">
+      <h1 class="game-title">GAME OVER</h1>
+      <div id="winner-text"></div>
+      <table id="final-scores"></table>
+      <button id="btn-play-again" class="btn-primary">Play Again</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

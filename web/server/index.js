@@ -1,11 +1,38 @@
 const { WebSocketServer } = require('ws');
+const http = require('http');
+const fs   = require('fs');
+const path = require('path');
 const Room = require('./Room');
 
-const PORT = process.env.PORT || 3000;
-const rooms = new Map();
+const PORT       = process.env.PORT || 3000;
+const rooms      = new Map();
+const CLIENT_DIR = path.join(__dirname, '../client');
+const MIME       = {
+  '.html': 'text/html',
+  '.css':  'text/css',
+  '.js':   'application/javascript',
+};
 
-const wss = new WebSocketServer({ port: PORT });
-console.log(`Zatacka server running on port ${PORT}`);
+// HTTP server — serves web/client/ as static files
+const server = http.createServer((req, res) => {
+  // Only allow simple file paths (no traversal)
+  const safePath = req.url.replace(/\.\./g, '').split('?')[0];
+  const filePath = path.join(CLIENT_DIR, safePath === '/' ? 'index.html' : safePath);
+  const ext      = path.extname(filePath);
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end('Not found');
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': MIME[ext] || 'text/plain' });
+    res.end(data);
+  });
+});
+
+// WebSocket server attaches to the same HTTP server
+const wss = new WebSocketServer({ server });
+server.listen(PORT, () => console.log(`Zatacka server running on port ${PORT}`));
 
 wss.on('connection', (ws) => {
     let currentRoom = null;
