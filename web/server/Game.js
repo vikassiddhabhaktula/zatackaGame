@@ -78,6 +78,9 @@ class Game {
     tick() {
         if (!this.roundActive) return;
 
+        // Advance tick counter so CollisionGrid can age-gate self-trail cells.
+        this.grid.advanceTick();
+
         const trailUpdates = [];
         const prevPositions = new Map();
 
@@ -251,17 +254,11 @@ class Game {
     }
 
     checkCollision(player, trailWidth) {
-        // graceActive=true: the player's own trail cells are always skipped.
-        // With SPEED=1.8 and halfRadius=ceil(3/2)=2 the head would land inside
-        // its own freshly-placed mark every single tick, making self-trail
-        // collision impossible to implement correctly at these constants.
-        // Players are therefore killed only by walls and other players' trails.
         return this.grid.checkCollision(
             player.x,
             player.y,
             trailWidth,
-            player.id,
-            true
+            player.id
         );
     }
 
