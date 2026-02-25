@@ -6,6 +6,12 @@ Zatacka is a real-time multiplayer snake/trail game where players steer a contin
 
 The playable version is a browser-based webapp located in `web/`.
 
+### Live deployment
+
+**https://zatackagame.onrender.com**
+
+Hosted on Render (free tier). The server may take ~30 seconds to wake up after a period of inactivity.
+
 ### Run locally
 
 ```bash
@@ -35,6 +41,16 @@ Then open **http://localhost:3000** in one or more browser tabs.
 | `web/server/CollisionGrid.js` | Pixel-grid collision detection |
 | `web/server/Room.js` | Lobby / room management |
 | `web/client/` | Static HTML + JS served to the browser |
+| `render.yaml` | Render deployment config |
+
+### Deploying to Render
+
+The repo includes a `render.yaml` at the root. To deploy:
+
+1. Go to [dashboard.render.com](https://dashboard.render.com) → **New → Web Service**
+2. Connect the GitHub repo — Render auto-detects `render.yaml`
+3. Start command: `node index.js` (build: `npm install`)
+4. Deploy — a public URL is assigned automatically
 
 ---
 
