@@ -1,9 +1,10 @@
-// FRESH_TICKS: own-trail cells placed within this many ticks are ignored during
-// self-collision checks.  With SPEED=1.8 px/tick and halfRadius=ceil(3/2)=2 px,
-// the head always overlaps the last ~2 ticks of its own trail; 4 ticks gives a
-// 7.2 px exclusion zone — safely beyond halfRadius while still detecting genuine
-// self-crossings (minimum U-turn takes ~63 ticks at TURN_RATE=0.05 rad/tick).
-const FRESH_TICKS = 4;
+// FRESH_TICKS: own-trail cells younger than this many ticks are ignored during
+// self-collision checks.  The single-pixel head check means only one edge case
+// requires exclusion: at 45°, the previous tick's 3×3 markLine square includes
+// the current head position (diagonal corner, age=1).  FRESH_TICKS=2 skips cells
+// with age 0 or 1, covering this case.  Genuine self-crossings (minimum U-turn
+// ≈63 ticks at TURN_RATE=0.05 rad/tick) always have age ≥63 and are always fatal.
+const FRESH_TICKS = 2;
 
 class CollisionGrid {
     constructor(width, height) {
@@ -55,28 +56,19 @@ class CollisionGrid {
             return true;
         }
 
+        // Single-pixel point check: the head occupies exactly one grid cell.
+        // markLine uses halfWidth=1 (3×3 squares) so trail is wide enough that
+        // the head can never skip over it at SPEED=1.8 px/tick.
         const selfStored = selfId + 1;
-        for (let dy = -halfRadius; dy <= halfRadius; dy++) {
-            for (let dx = -halfRadius; dx <= halfRadius; dx++) {
-                const cx = ix + dx;
-                const cy = iy + dy;
-                if (cx < 0 || cx >= this.width || cy < 0 || cy >= this.height) {
-                    continue;
-                }
-                const cellIdx = cy * this.width + cx;
-                const cell = this.grid[cellIdx];
-                if (cell === 0) continue;
-
-                if (cell === selfStored) {
-                    // Own trail: only fatal once it's old enough that the head
-                    // has genuinely crossed back over it.
-                    if (this.tick - this.age[cellIdx] >= FRESH_TICKS) {
-                        return true;
-                    }
-                } else {
-                    // Another player's trail: always fatal.
-                    return true;
-                }
+        const cellIdx = iy * this.width + ix;
+        const cell = this.grid[cellIdx];
+        if (cell !== 0) {
+            if (cell === selfStored) {
+                // Own trail: only fatal once old enough to be a genuine crossing.
+                if (this.tick - this.age[cellIdx] >= FRESH_TICKS) return true;
+            } else {
+                // Another player's trail: always fatal.
+                return true;
             }
         }
 
